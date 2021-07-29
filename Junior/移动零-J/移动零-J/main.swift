@@ -22,23 +22,28 @@
 
 import Foundation
 
-/*
- 执行用时：
- 32 ms
- , 在所有 Swift 提交中击败了
- 99.20%
- 的用户
- 内存消耗：
- 14.1 MB
- , 在所有 Swift 提交中击败了
- 65.42%
- 的用户
- */
+
 class Solution {
     
+    /*
+     执行用时：
+     32 ms
+     , 在所有 Swift 提交中击败了
+     99.20%
+     的用户
+     内存消耗：
+     14.1 MB
+     , 在所有 Swift 提交中击败了
+     65.42%
+     的用户
+     */
     /*双指针法：left，right。left从左往右找0，找到后，right从left+1位找非0，找到后，交换左右指针指向的值(交换后，如果右指针已经指向最后一个元素，return)。left继续往右找0，找到后，right从上次位置右移找非0。直到left到达倒数第2个元素，或right指针到达最后一个元素（非0交换，0结束）。
      */
     func moveZeroes(_ nums: inout [Int]) {
+        return moveZeroes1(&nums)
+    }
+    
+    func moveZeroes0(_ nums: inout [Int])  {
         var left = 0,right = 0
         while left < nums.count - 1 {
             if nums[left] == 0 {
@@ -70,6 +75,41 @@ class Solution {
             
             //自增是必须的，不能放在上面else里！否则可能死循环（eg:[1,0,2,4,0,0,5,6]）！
             left += 1
+        }
+    }
+    
+    
+    /*执行用时：
+     36 ms
+     , 在所有 Swift 提交中击败了
+     90.96%
+     的用户
+     内存消耗：
+     14 MB
+     , 在所有 Swift 提交中击败了
+     90.16%
+     的用户
+     */
+    /*这里可以参照双指针的思路解决，指针j是一直往后移动的，如果指向的值不等于0才对他进行操作。同时保证 i 指向前面第一个 0 的位置，然后我们让 j 指向的值和 i 指向的值交换
+     */
+    func moveZeroes1(_ nums: inout [Int]) {
+        
+        //保证 i 始终在寻找或指向左边第一个 0 的位置；
+        //如果前几个都不是0，保证i、j同时右移
+        var i = 0
+        for j in 0..<nums.count {
+            if nums[j] != 0 {
+                
+                if j != i {
+                    //异或交换元素的坑：i、j必须不相等！！！
+                    nums[i] = nums[i] ^ nums[j]
+                    nums[j] = nums[i] ^ nums[j]
+                    nums[i] = nums[i] ^ nums[j]
+                }
+               
+                i += 1
+            }
+            
         }
     }
 }
